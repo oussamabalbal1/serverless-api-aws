@@ -27,10 +27,9 @@ This project uses a classic serverless pattern. An API Gateway exposes HTTP endp
 
 * **API Gateway**: Provides the public RESTful API endpoints (`/users` and `/users/{userId}`) and handles request/response mapping.
 * **AWS Lambda**: Runs the backend logic in a Node.js 20.x environment. It contains a single function that routes requests to the appropriate logic for handling CRUD operations.
-* **Amazon DynamoDB**: A fully managed NoSQL database used to store user information. The table uses on-demand (`PAY_PER_REQUEST`) capacity.
+* **Amazon DynamoDB**: A fully managed NoSQL database used to store user information. The table uses on-demand (`PROVISIONED`) capacity.
 * **IAM**: Manages the execution role and policies for the Lambda function, granting it least-privilege access to DynamoDB and CloudWatch Logs.
 * **Amazon CloudWatch**: Automatically collects logs and metrics from the Lambda function and API Gateway for monitoring and debugging.
-* **Application Load Balancer (ALB)**: An alternative entry point is also configured, which forwards all HTTP traffic to the Lambda function.
 
 ### **Component Breakdown**
 
@@ -52,9 +51,9 @@ The entire stack is defined in Terraform and can be deployed with a few commands
 ### **Prerequisites**
 
 * An AWS Account
-* [AWS CLI](https://aws.amazon.com/cli/) configured with appropriate permissions
-* [Terraform](https://www.terraform.io/downloads.html) (v1.0 or later)
-* [Node.js](https://nodejs.org/) (v20.x or later, to match the Lambda runtime)
+* `AWS CLI` configured with appropriate permissions
+* `Terraform`
+* `Node.js` (v20.x or later, to match the Lambda runtime)
 
 ### **Deployment Steps**
 
@@ -81,7 +80,6 @@ The entire stack is defined in Terraform and can be deployed with a few commands
     ```bash
     terraform apply
     ```
-    Terraform will output the `alb_dns_name` and the API Gateway Invoke URL will be available in the AWS Console.
 
 ### **Manual Setup Steps**
 
@@ -138,30 +136,19 @@ The API is deployed to a stage named `v1`. The base URL will be similar to: `htt
 * **IAM Roles & Policies:** The principle of *least privilege* is applied. The Lambda execution role grants only the permissions required by the function's code:
     * `logs:CreateLogGroup`, `logs:CreateLogStream`, `logs:PutLogEvents` for writing logs.
     * `dynamodb:PutItem`, `dynamodb:Scan`, `dynamodb:GetItem`, `dynamodb:UpdateItem`, `dynamodb:DeleteItem` on the specific DynamoDB table resource.
-* **Network Security:** The Lambda function runs in the default VPC. The optional ALB is protected by a security group allowing public inbound traffic on port 80.
+
 * **Data Security:**
     * **Encryption at Rest:** Data in the DynamoDB table is automatically encrypted at rest by default.
     * **Encryption in Transit:** All API Gateway endpoints require HTTPS, ensuring data is encrypted with TLS during transit.
 
 ---
 
+
 ## **💰 6. Cost**
 
-* **Cost Estimation:** This architecture is extremely cost-effective and falls well within the AWS Free Tier for low-to-moderate traffic. For example, 1 million requests per month would likely cost only a few dollars.
+* **Cost Estimation:** This architecture is extremely cost-effective and falls well within the AWS Free Tier for low-to-moderate traffic.
+
 * **Cost Optimization:**
     * The serverless model means you pay nothing for idle time.
-    * DynamoDB is configured with `PAY_PER_REQUEST` billing, so you only pay for the read/write operations you perform.
-
+    * DynamoDB is configured with `PROVISIONED` billing to be eligible for the AWS Free Tier
 ---
-
-## **🔗 7. Appendices**
-
-### **Source Code**
-
-* [Link to GitHub Repository](URL_to_your_repo)
-
-### **External Resources**
-
-* [Terraform AWS Provider Documentation](https://registry.terraform.io/providers/hashicorp/aws/latest/docs)
-* [AWS Lambda Developer Guide](https://docs.aws.amazon.com/lambda/latest/dg/welcome.html)
-* [Amazon DynamoDB Developer Guide](https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/Introduction.html)
