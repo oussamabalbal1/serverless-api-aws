@@ -130,8 +130,42 @@ The API is deployed to a stage named `v1`. The base URL will be similar to: `htt
 * **Alarms:** No custom alarms are configured in this project by default.
 
 ---
+## **📸 5. Visual Reference & Testing**
 
-## **🛡️ 5. Security**
+This section provides screenshots of the key AWS resources and Postman test results to visually confirm the project's setup and functionality.
+
+
+### **AWS Console Screenshots**
+
+**API Gateway Resources & Methods**
+*A screenshot showing the `/users` and `/users/{userId}` resources and their associated HTTP methods (GET, POST, etc.) in the API Gateway console.*
+![API Gateway Console](./images/aws-console-api-gateway.PNG)
+
+**Lambda Function Configuration**
+*A screenshot of the Lambda function's main configuration page, showing the runtime and handler.*
+![Lambda Console](./images/aws-console-lambda.PNG)
+
+**DynamoDB Table Items**
+*A screenshot showing a few example items in the DynamoDB table.*
+![DynamoDB Console](./images/aws-console-dynamodb.PNG)
+
+### **Postman API Tests**
+
+**POST /users - Create User**
+*A screenshot of a successful POST request in Postman, showing the request body and the `201 Created` response.*
+![Postman POST Request](./images/postman-post-user.PNG)
+
+**GET /users - Get Users**
+*A screenshot of a successful GET request for all users, showing the `200 OK` response with the users data.*
+![Postman GET Request](./images/postman-get-users.PNG)
+
+**PATCH /users/{userId} - Update User**
+*A screenshot of a successful PATCH request, showing the updated data in the `200 OK` response.*
+![Postman PATCH Request](./images/postman-patch-user.PNG)
+
+---
+
+## **🛡️ 6. Security**
 
 * **IAM Roles & Policies:** The principle of *least privilege* is applied. The Lambda execution role grants only the permissions required by the function's code:
     * `logs:CreateLogGroup`, `logs:CreateLogStream`, `logs:PutLogEvents` for writing logs.
@@ -144,7 +178,7 @@ The API is deployed to a stage named `v1`. The base URL will be similar to: `htt
 ---
 
 
-## **💰 6. Cost**
+## **💰 7. Cost**
 
 * **Cost Estimation:** This architecture is extremely cost-effective and falls well within the AWS Free Tier for low-to-moderate traffic.
 
